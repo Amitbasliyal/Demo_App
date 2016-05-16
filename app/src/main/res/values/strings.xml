@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">FacebookDemo_App</string>
+    <!--<string name="app_id">596866003750867</string>-->   <!--Sampan Sir-->
+    <string name="facebook_app_id">1007208859366482</string>    <!--My Hello App-->
+</resources>
