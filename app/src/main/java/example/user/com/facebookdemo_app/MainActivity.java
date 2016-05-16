@@ -12,8 +12,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.crashlytics.android.Crashlytics;
-import io.fabric.sdk.android.Fabric;
 import java.io.IOException;
 import java.util.HashMap;
 
@@ -31,7 +29,6 @@ public class MainActivity extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Fabric.with(this, new Crashlytics());
         setContentView(R.layout.activity_main);
         session = new SessionManager(getApplicationContext());
         session.checkLogin();
@@ -46,7 +43,7 @@ public class MainActivity extends Activity {
         _CountTimer = (TextView) findViewById(R.id.timer_view);
         _ImgView = (ImageView) findViewById(R.id.imgView);
         _CountTimer.setText("00:30");
-        final GumzoCounterClass timer = new GumzoCounterClass(30000, 1000);
+        final CounterClass timer = new CounterClass(30000, 1000);
         _Start.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -119,13 +116,11 @@ public class MainActivity extends Activity {
         });
     }
 
-    public class GumzoCounterClass extends CountDownTimer {
-        public GumzoCounterClass(long millisInFuture, long countDownInterval) {
+    public class CounterClass extends CountDownTimer {
+        public CounterClass(long millisInFuture, long countDownInterval) {
             super(millisInFuture, countDownInterval);
         }
-
         @Override
-
         public void onFinish() {
             _CountTimer.setText("Completed");
             _Play.setVisibility(View.VISIBLE);
