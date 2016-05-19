@@ -65,10 +65,6 @@ public class MainActivity extends Activity {
         _Play = (Button) findViewById(R.id.play);
         _CountTimer = (TextView) findViewById(R.id.timer_view);
         _ImgView = (ImageView) findViewById(R.id.imgView);
-        /**
-         * premission for marshmallow in paste  http://paste.ofcode.org/MSMgvAC5vyJUZCNq7DTxQs
-         */
-
         _CountTimer.setText("00:30");
         final CounterClass timer = new CounterClass(30000, 1000);
         _Start.setOnClickListener(new View.OnClickListener() {
