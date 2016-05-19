@@ -1,19 +1,31 @@
 package example.user.com.facebookdemo_app;
 
+import android.Manifest;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.pm.PackageManager;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
 import android.os.CountDownTimer;
 import android.os.Environment;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.crashlytics.android.Crashlytics;
+
 import java.io.IOException;
 import java.util.HashMap;
+
+import io.fabric.sdk.android.Fabric;
 
 public class MainActivity extends Activity {
 
@@ -25,14 +37,24 @@ public class MainActivity extends Activity {
     MediaPlayer musicplayer;
     TextView _CountTimer;
     private String outputFile = null;
+    private static final int REQUEST_PERMISSIONS = 10;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Fabric.with(this, new Crashlytics());
         setContentView(R.layout.activity_main);
+        if(hasMicrophone()){
+        }else
+        {
+            showAlertDialog(MainActivity.this, "Microphone Status",
+                    "You don't have microphone", false);
+        }
+
         session = new SessionManager(getApplicationContext());
         session.checkLogin();
         HashMap<String, String> user = session.getUserDetails();
+
         String name = user.get(SessionManager.KEY_NAME);
         String email = user.get(SessionManager.KEY_EMAIL);
         outputFile = Environment.getExternalStorageDirectory().getAbsolutePath() + "/recording.3gp";
@@ -42,12 +64,15 @@ public class MainActivity extends Activity {
         _Play = (Button) findViewById(R.id.play);
         _CountTimer = (TextView) findViewById(R.id.timer_view);
         _ImgView = (ImageView) findViewById(R.id.imgView);
+        /**
+         * premission for marshmallow in paste  http://paste.ofcode.org/MSMgvAC5vyJUZCNq7DTxQs
+         */
+
         _CountTimer.setText("00:30");
         final CounterClass timer = new CounterClass(30000, 1000);
         _Start.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 if (musicplayer != null && musicplayer.isPlaying()) {
                     musicplayer.stop();
                 }
@@ -136,5 +161,38 @@ public class MainActivity extends Activity {
             _CountTimer.setText((millisUntilFinished / 1000) + "");
 
         }
+    }
+    protected boolean hasMicrophone() {
+        PackageManager pmanager = this.getPackageManager();
+        return pmanager.hasSystemFeature(
+                PackageManager.FEATURE_MICROPHONE);
+    }
+
+    public void showAlertDialog(Context context, String title, String message, Boolean status) {
+        AlertDialog alertDialog = new AlertDialog.Builder(context).create();
+
+        // Setting Dialog Title
+        alertDialog.setTitle(title);
+        // Setting Dialog Message
+        alertDialog.setMessage(message);
+        // Setting alert dialog icon
+        // alertDialog.setIcon((status) ? R.mipmap.ic_launcher : R.mipmap.ic_launcher);
+        // Setting OK Button
+        alertDialog.setButton("OK", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                finish();
+                System.exit(0);
+            }
+        });
+
+        // Showing Alert Message
+        alertDialog.show();
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
+        System.exit(0);
     }
 }
