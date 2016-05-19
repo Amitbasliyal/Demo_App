@@ -45,10 +45,11 @@ public class MainActivity extends Activity {
         Fabric.with(this, new Crashlytics());
         setContentView(R.layout.activity_main);
         if(hasMicrophone()){
+            Toast.makeText(MainActivity.this, "Detect your microphone", Toast.LENGTH_LONG).show();
         }else
         {
             showAlertDialog(MainActivity.this, "Microphone Status",
-                    "You don't have microphone", false);
+                    "Not Detected your microphone", false);
         }
 
         session = new SessionManager(getApplicationContext());
@@ -175,9 +176,6 @@ public class MainActivity extends Activity {
         alertDialog.setTitle(title);
         // Setting Dialog Message
         alertDialog.setMessage(message);
-        // Setting alert dialog icon
-        // alertDialog.setIcon((status) ? R.mipmap.ic_launcher : R.mipmap.ic_launcher);
-        // Setting OK Button
         alertDialog.setButton("OK", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 finish();
